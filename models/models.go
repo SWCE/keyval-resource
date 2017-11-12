@@ -1,6 +1,8 @@
 package models
 
-type EmptyVersion struct {}
+type EmptyVersion struct {
+	Dummy string  `json:"dummy"`
+}
 
 type Version map[string]string
 

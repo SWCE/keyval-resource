@@ -47,6 +47,7 @@ var _ = Describe("In", func() {
 				Version: models.Version{
 					"a": "1",
 					"b": "2",
+					"dummy": "dummy",
 				},
 				Source:  models.Source{},
 			}

@@ -45,7 +45,9 @@ func main() {
 
 	var keys []string
 	for k := range inVersion {
-		keys = append(keys, k)
+		if k != "dummy" {
+			keys = append(keys, k)
+		}
 	}
 	sort.Strings(keys)
 

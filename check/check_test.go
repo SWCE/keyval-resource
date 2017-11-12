@@ -56,17 +56,21 @@ var _ = Describe("Check", func() {
 		Context("when no version is given", func() {
 			It("outputs an empty version", func() {
 				Expect(response).To(HaveLen(1))
+				Expect(response[0].Dummy).To(Equal("dummy"))
 			})
 		})
 
 		Context("when version is given", func() {
 
 			BeforeEach(func() {
-				version = &models.EmptyVersion{}
+				version = &models.EmptyVersion{
+					Dummy: "dummy",
+				}
 			})
 
 			It("outputs an empty version", func() {
 				Expect(response).To(HaveLen(1))
+				Expect(response[0].Dummy).To(Equal("dummy"))
 			})
 		})
 
