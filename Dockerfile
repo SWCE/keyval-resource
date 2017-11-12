@@ -1,11 +1,11 @@
 FROM golang:alpine as builder
-COPY . /go/src/github.com/concourse/time-resource
+COPY . /go/src/github.com/regevbr/keyval-resource
 ENV CGO_ENABLED 0
-ENV GOPATH /go/src/github.com/concourse/time-resource/Godeps/_workspace:${GOPATH}
-ENV PATH /go/src/github.com/concourse/time-resource/Godeps/_workspace/bin:${PATH}
-RUN go build -o /assets/out github.com/concourse/time-resource/out
-RUN go build -o /assets/in github.com/concourse/time-resource/in
-RUN go build -o /assets/check github.com/concourse/time-resource/check
+ENV GOPATH /go/src/github.com/regevbr/keyval-resource/Godeps/_workspace:${GOPATH}
+ENV PATH /go/src/github.com/regevbr/keyval-resource/Godeps/_workspace/bin:${PATH}
+RUN go build -o /assets/out github.com/regevbr/keyval-resource/out
+RUN go build -o /assets/in github.com/regevbr/keyval-resource/in
+RUN go build -o /assets/check github.com/regevbr/keyval-resource/check
 RUN set -e; for pkg in $(go list ./...); do \
 		go test -o "/tests/$(basename $pkg).test" -c $pkg; \
 	done

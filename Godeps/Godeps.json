@@ -15,5 +15,10 @@
 			"Comment": "v1.0-71-g2152b45",
 			"Rev": "2152b45fa28a361beba9aab0885972323a444e28"
 		}
+		{
+			"ImportPath": "github.com/magiconair/properties",
+			"Comment": "v1.7.3",
+			"Rev": "152b45fa28a361beba9aab0885972323a444e28"
+		}
 	]
 }
