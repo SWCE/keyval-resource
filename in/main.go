@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"io"
 	"os"
 	"path/filepath"
-	"time"
 
-	"github.com/concourse/time-resource/models"
+	"../models"
+	"fmt"
+	"bufio"
+	"sort"
 )
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 		fatal("creating destination", err)
 	}
 
-	file, err := os.Create(filepath.Join(destination, "input"))
+	file, err := os.Create(filepath.Join(destination, "keyval.properties"))
 	if err != nil {
 		fatal("creating input file", err)
 	}
@@ -32,21 +33,39 @@ func main() {
 
 	var request models.InRequest
 
-	err = json.NewDecoder(io.TeeReader(os.Stdin, file)).Decode(&request)
+	err = json.NewDecoder(os.Stdin).Decode(&request)
 	if err != nil {
 		fatal("reading request", err)
 	}
 
-	versionTime := request.Version.Time
-	if versionTime.IsZero() {
-		versionTime = time.Now()
+	var inVersion = request.Version
+	var metadata = models.Metadata{}
+
+	w := bufio.NewWriter(file)
+
+	var keys []string
+	for k := range inVersion {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		fmt.Fprintf(w, "%s=%s\n", k, inVersion[k])
+		metadata = append(metadata, models.MetadataField{
+			Name:  k,
+			Value: inVersion[k],
+		})
 	}
 
-	inVersion := request.Version
-	inVersion.Time = versionTime
+	err = w.Flush()
+
+	if err != nil {
+		fatal("writing input file", err)
+	}
 
 	json.NewEncoder(os.Stdout).Encode(models.InResponse{
-		Version: inVersion,
+		Version:  inVersion,
+		Metadata: metadata,
 	})
 }
 

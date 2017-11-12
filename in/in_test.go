@@ -6,13 +6,14 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
-	"time"
+	//"path/filepath"
 
-	"github.com/concourse/time-resource/models"
+	"../models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
+	"path/filepath"
+	"github.com/magiconair/properties"
 )
 
 var _ = Describe("In", func() {
@@ -41,11 +42,13 @@ var _ = Describe("In", func() {
 		var response models.InResponse
 
 		BeforeEach(func() {
-			interval := models.Interval(time.Second)
 
 			request = models.InRequest{
-				Version: models.Version{Time: time.Now()},
-				Source:  models.Source{Interval: &interval},
+				Version: models.Version{
+					"a": "1",
+					"b": "2",
+				},
+				Source:  models.Source{},
 			}
 
 			response = models.InResponse{}
@@ -68,29 +71,37 @@ var _ = Describe("In", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("reports the version's time as the version", func() {
-			Expect(response.Version.Time.UnixNano()).To(Equal(request.Version.Time.UnixNano()))
+		It("reports the version and metadata to be the input version", func() {
+			Expect(len(response.Version)).To(Equal(2))
+			Expect(response.Version["a"]).To(Equal("1"))
+			Expect(response.Version["b"]).To(Equal("2"))
+
+			Expect(len(response.Metadata)).To(Equal(2))
+			Expect(response.Metadata[0].Name).To(Equal("a"))
+			Expect(response.Metadata[0].Value).To(Equal("1"))
+			Expect(response.Metadata[1].Name).To(Equal("b"))
+			Expect(response.Metadata[1].Value).To(Equal("2"))
 		})
 
-		It("writes the requested version and source to the destination", func() {
-			input, err := os.Open(filepath.Join(destination, "input"))
-			Expect(err).NotTo(HaveOccurred())
+		It("writes the requested data the destination", func() {
 
-			var requested models.InRequest
-			err = json.NewDecoder(input).Decode(&requested)
-			Expect(err).NotTo(HaveOccurred())
+			var data = properties.MustLoadFile(filepath.Join(destination, "keyval.properties"),properties.UTF8).Map();
 
-			Expect(requested.Version.Time.Unix()).To(Equal(request.Version.Time.Unix()))
-			Expect(requested.Source).To(Equal(request.Source))
+			Expect(len(data)).To(Equal(2))
+			Expect(data["a"]).To(Equal("1"))
+			Expect(data["b"]).To(Equal("2"))
 		})
 
-		Context("when the request has no time in its version", func() {
+		Context("when the request has no keys in version", func() {
 			BeforeEach(func() {
 				request.Version = models.Version{}
 			})
 
-			It("reports the current time as the version", func() {
-				Expect(response.Version.Time.Unix()).To(BeNumerically("~", time.Now().Unix(), 1))
+			It("reports  empty data", func() {
+				Expect(len(response.Version)).To(Equal(0))
+				Expect(len(response.Metadata)).To(Equal(0))
+				var data = properties.MustLoadFile(filepath.Join(destination, "keyval.properties"),properties.UTF8).Map();
+				Expect(len(data)).To(Equal(0))
 			})
 		})
 	})

@@ -7,12 +7,12 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"time"
-
-	"github.com/concourse/time-resource/models"
+	"../models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
+	"bufio"
+	"fmt"
 )
 
 var _ = Describe("Out", func() {
@@ -28,8 +28,9 @@ var _ = Describe("Out", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		source = path.Join(tmpdir, "out-dir")
-
+		os.MkdirAll(source, 0755)
 		outCmd = exec.Command(outPath, source)
+		fmt.Printf("%s", tmpdir)
 	})
 
 	AfterEach(func() {
@@ -41,12 +42,7 @@ var _ = Describe("Out", func() {
 		var response models.OutResponse
 
 		BeforeEach(func() {
-			interval := models.Interval(time.Second)
-
-			request = models.OutRequest{
-				Source: models.Source{Interval: &interval},
-			}
-
+			request = models.OutRequest{}
 			response = models.OutResponse{}
 		})
 
@@ -68,8 +64,40 @@ var _ = Describe("Out", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("reports the current time as the version", func() {
-			Expect(response.Version.Time).To(BeTemporally("~", time.Now(), time.Second))
+		Context("output data in properties file", func() {
+			BeforeEach(func() {
+				file, _ := os.Create(path.Join(source, "keyval.properties"))
+				defer file.Close()
+				w := bufio.NewWriter(file)
+				fmt.Fprintln(w, "a=1")
+				fmt.Fprintln(w, "b=2")
+				w.Flush()
+			})
+
+			It("reports empty data", func() {
+				Expect(len(response.Version)).To(Equal(2))
+				Expect(response.Version["a"]).To(Equal("1"))
+				Expect(response.Version["b"]).To(Equal("2"))
+
+				Expect(len(response.Metadata)).To(Equal(2))
+				Expect(response.Metadata[0].Name).To(Equal("a"))
+				Expect(response.Metadata[0].Value).To(Equal("1"))
+				Expect(response.Metadata[1].Name).To(Equal("b"))
+				Expect(response.Metadata[1].Value).To(Equal("2"))
+			})
 		})
+
+		Context("output no data in properties file", func() {
+			BeforeEach(func() {
+				file, _ := os.Create(path.Join(source, "keyval.properties"))
+				defer file.Close()
+			})
+
+			It("reports empty data", func() {
+				Expect(len(response.Version)).To(Equal(0))
+				Expect(len(response.Metadata)).To(Equal(0))
+			})
+		})
+
 	})
 })
