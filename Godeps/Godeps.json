@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/concourse/time-resource",
+	"ImportPath": "github.com/regevbr/keyval-resource",
 	"GoVersion": "go1.5.1",
 	"Packages": [
 		"./..."
