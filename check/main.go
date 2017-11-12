@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"../models"
+	"github.com/regevbr/keyval-resource/models"
 )
 
 func main() {

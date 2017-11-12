@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"../models"
+	"github.com/regevbr/keyval-resource/models"
 	"sort"
 	"github.com/magiconair/properties"
 )
