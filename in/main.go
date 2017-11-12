@@ -43,11 +43,11 @@ func main() {
 
 	w := bufio.NewWriter(file)
 
+	delete(inVersion,"dummy")
+
 	var keys []string
 	for k := range inVersion {
-		if k != "dummy" {
-			keys = append(keys, k)
-		}
+		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 
