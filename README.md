@@ -34,7 +34,7 @@ Check returns a single `dummy` key that will be discarded and only used to satis
 
 ### `in`: Report the given time.
 
-Fetches the given key values and sores them in the `keyval.properties` file.
+Fetches the given key values and stores them in the `keyval.properties` file.
 The format is of a `.properties` file, e.g. `"<key>=<value>"`.
 Key values are also reported as the metadata.
 
