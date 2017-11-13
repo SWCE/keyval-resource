@@ -117,7 +117,7 @@ fi
 
 ```
 
-### Auto export the keys
+### Auto pass the keys
 
 You can add the following bash script to the **end** of every job to auto pass the specific environment variables as key values to the next job. 
 The script only passes environment variables that start with `PASSED_`. 
