@@ -89,6 +89,66 @@ jobs:
 The build job get an empty file in `keyval/keyval.properties`. It then writes all the key values it needs to pass along (e.g. artifact id) in the `keyvalout/keyval.properties` file. 
 The test-deploy can ready the data from the `keyval/keyval.properties` file and use them as it pleases. 
 
+## CI suggestions
+
+### Auto export the keys
+
+You can add the following bash script to the **start** of every job to auto export the passed key values, if they exist. 
+The script assumes that the resource folder is `keyval`. 
+
+* Don't forget to source the script so it's exports will be passed along
+
+```bash
+#!/bin/bash
+
+props="${ROOT_FOLDER}/keyval/keyval.properties"
+if [ -f "$props" ]
+then
+  echo "Reading passed key values"
+  while IFS= read -r var
+  do
+    if [ ! -z "$var" ]
+    then
+      echo "Adding: $var"
+      export "$var"
+    fi
+  done < "$props"
+fi
+
+```
+
+### Auto export the keys
+
+You can add the following bash script to the **end** of every job to auto pass the specific environment variables as key values to the next job. 
+The script only passes environment variables that start with `PASSED_`. 
+The script assumes that the resource out file is `keyvalout/keyval.properties`:
+
+e.g. 
+```YAML
+- put: keyval
+  params:
+    file: keyvalout/keyval.properties
+``` 
+
+```bash
+#!/bin/bash
+
+propsDir="${ROOT_FOLDER}/keyvalout"
+propsFile="${propsDir}/keyval.properties"
+if [ -d "$propsDir" ]
+then
+  touch "$propsFile"
+  echo "Setting key values for next job in ${propsFile}"
+  while IFS='=' read -r name value ; do
+    if [[ $name == 'PASSED_'* ]]; then
+      echo "Adding: ${name}=${value}"
+      echo "${name}=${value}" >> "$propsFile"
+    fi
+  done < <(env)
+fi
+
+```
+
 ## Development
 
 ### Prerequisites
