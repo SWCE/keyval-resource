@@ -1,140 +1,93 @@
-# Time Resource
+# KeyVal Resource
 
-Implements a resource that reports new versions on a configured interval. The
-interval can be arbitrarily long.
-
-This resource is built to satisfy "trigger this build at least once every 5
-minutes," not "trigger this build on the 10th hour of every Sunday." That
-level of precision is better left to other tools.
+Implements a resource that passes key values between jobs without using any external resource such as git/ s3 etc.
 
 ## Source Configuration
 
-* `interval`: *Optional.* The interval on which to report new versions. Valid
-  values: `60s`, `90m`, `1h`.
+``` YAML
+resource_types:
+  - name: keyval
+    type: docker-image
+    source:
+      repository: regevbr/keyval-resource
+      
+resources:
+  - name: keyval
+    type: keyval
+```
 
-* `location`: *Optional. Default `UTC`.* The
-  [location](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) in
-  which to interpret `start`, `stop`, and `days`.
+#### Parameters
 
-  e.g.
-
-  ```
-  location: Africa/Abidjan
-  ```
-
-* `start` and `stop`: *Optional.* Only create new time versions between this
-  time range. The supported formats for the times are: `3:04 PM`, `3PM`, `3
-  PM`, `15:04`, and `1504`.
-
-  e.g.
-
-  ```
-  start: 8:00 PM
-  stop: 9:00 PM
-  ```
-
-  **Deprecation: an offset may be appended, e.g. `+0700` or `-0400`, but you
-  should use `location` instead.**
-
-* `days`: *Optional.* Run only on these day(s). Supported days are: `Sunday`,
-  `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday` and `Saturday`.
-
-  e.g.
-
-  ```
-  days: [Monday, Wednesday]
-  ```
-
-These can be combined to emit a new version on an interval during a particular
-time period.
+*None.*
 
 ## Behavior
 
-### `check`: Produce timestamps satisfying the interval.
+### `check`: Produce a single dummy key
 
-Returns current version and new version only if it has been longer than `interval` since the
-given version, or if there is no version given.
-
+The resource uses the `version` identifier of the resource as a way to pass the data between jobs.
+Check returns a single `dummy` key that will be discarded and only used to satisfy the `check` behavior.
 
 ### `in`: Report the given time.
 
-Fetches the given timestamp, writing the request's metadata to `input` in the
-destination.
+Fetches the given key values and sores them in the `keyval.properties` file.
+The format is of a `.properties` file, e.g. `"<key>=<value>"`.
+Key values are also reported as the metadata.
 
 #### Parameters
 
 *None.*
 
+### `out`: Consumes the given properties file
 
-### `out`: Produce the current time.
+``` YAML
+- put: keyval
+  params:
+    file: keyvalout/keyval.properties
+```
 
-Returns a version for the current timestamp. This can be used to record the
-time within a build plan, e.g. after running some long-running task.
+Reads the given properties file and sets them for the next job.
 
 #### Parameters
-
-*None.*
+- file - the properties file to read the key values from
 
 
 ## Examples
 
-### Periodic trigger
+```YAML
+resource_types:
+  - name: keyval
+    type: docker-image
+    source:
+      repository: regevbr/keyval-resource
 
-```yaml
 resources:
-- name: 5m
-  type: time
-  source: {interval: 5m}
+  - name: keyval
+    type: keyval
 
 jobs:
-- name: something-every-5m
-  plan:
-  - get: 5m
-    trigger: true
-  - task: something
-    config: # ...
+
+  - name: build
+    plan:
+      - aggregate:
+        - get: keyval
+      - task: build
+        file: tools/tasks/build/task.yml
+      - put: keyval
+        params:
+          file: keyvalout/keyval.properties
+
+  - name: test-deploy
+    plan:
+      - aggregate:
+        - get: keyval
+          passed:
+          - build
+      - task: test-deploy
+        file: tools/tasks/task.yml
 ```
 
-### Trigger once within time range
-
-```yaml
-resources:
-- name: after-midnight
-  type: time
-  source:
-    start: 12:00 AM
-    stop: 1:00 AM
-    location: Asia/Sakhalin
-
-jobs:
-- name: something-after-midnight
-  plan:
-  - get: after-midnight
-    trigger: true
-  - task: something
-    config: # ...
-```
-
-### Trigger on an interval within time range
-
-```yaml
-resources:
-- name: 5m-during-midnight-hour
-  type: time
-  source:
-    interval: 5m
-    start: 12:00 AM
-    stop: 1:00 AM
-    location: America/Bahia_Banderas
-
-jobs:
-- name: something-every-5m-during-midnight-hour
-  plan:
-  - get: 5m-during-midnight-hour
-    trigger: true
-  - task: something
-    config: # ...
-```
+The build job get an empty file in `keyval/keyval.properties`. It then writes all the key values it needs to pass along (e.g. artifact id) in the `keyvalout/keyval.properties` file. 
+The test-deploy can ready the data from the `keyval/keyval.properties` file and use them as it pleases. 
 
 ## Development
 
