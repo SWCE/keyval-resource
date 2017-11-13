@@ -76,7 +76,9 @@ var _ = Describe("Out", func() {
 				fmt.Fprintln(w, "b=2")
 				w.Flush()
 				request = models.OutRequest{
-					File: path.Join("out", "keyval.properties"),
+					Params: models.OutParams {
+						File: path.Join("out", "keyval.properties"),
+					},		
 				}
 			})
 
@@ -100,7 +102,9 @@ var _ = Describe("Out", func() {
 				file, _ := os.Create(path.Join(outDir, "keyval.properties"))
 				defer file.Close()
 				request = models.OutRequest{
-					File: path.Join("out", "keyval.properties"),
+					Params: models.OutParams{
+						File: path.Join("out", "keyval.properties"),
+					},		
 				}
 			})
 

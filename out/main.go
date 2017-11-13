@@ -8,8 +8,6 @@ import (
 	"github.com/regevbr/keyval-resource/models"
 	"sort"
 	"github.com/magiconair/properties"
-	"fmt"
-	"database/sql/driver"
 )
 
 func main() {

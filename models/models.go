@@ -16,13 +16,13 @@ type InResponse struct {
 	Metadata Metadata `json:"metadata"`
 }
 
+type OutParams struct {
+	File string `json:"file"`
+}
+
 type OutRequest struct {
 	Source Source `json:"source"`
 	Params  OutParams `json:"params"`
-}
-
-type OutParams struct {
-	File string `json:"file"`
 }
 
 type OutResponse struct {
