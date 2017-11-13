@@ -1,4 +1,4 @@
-# KeyVal Resource
+# Concourse CI Key Value Resource
 
 Implements a resource that passes key values between jobs without using any external resource such as git/ s3 etc.
 
