@@ -8,6 +8,8 @@ import (
 	"github.com/regevbr/keyval-resource/models"
 	"sort"
 	"github.com/magiconair/properties"
+	"fmt"
+	"database/sql/driver"
 )
 
 func main() {
@@ -25,26 +27,32 @@ func main() {
 		fatal("reading request", err)
 	}
 
-	var data = properties.MustLoadFile(filepath.Join(destination, "keyval.properties"), properties.UTF8).Map();
-	var keys []string
-	for k := range data {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
+	if request.Params.File != "" {
+		var data = properties.MustLoadFile(filepath.Join(destination, request.Params.File), properties.UTF8).Map();
+		var keys []string
+		for k := range data {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
 
-	var metadata = models.Metadata{}
+		var metadata = models.Metadata{}
 
-	for _, k := range keys {
-		metadata = append(metadata, models.MetadataField{
-			Name:  k,
-			Value: data[k],
+		for _, k := range keys {
+			metadata = append(metadata, models.MetadataField{
+				Name:  k,
+				Value: data[k],
+			})
+		}
+
+		json.NewEncoder(os.Stdout).Encode(models.OutResponse{
+			Version:  data,
+			Metadata: metadata,
 		})
+	} else {
+		println("no properties file specified")
+		os.Exit(1)
 	}
 
-	json.NewEncoder(os.Stdout).Encode(models.OutResponse{
-		Version:  data,
-		Metadata: metadata,
-	})
 }
 
 func fatal(doing string, err error) {

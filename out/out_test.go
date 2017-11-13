@@ -13,6 +13,7 @@ import (
 	"github.com/onsi/gomega/gexec"
 	"bufio"
 	"fmt"
+	"github.com/onsi/gomega/gbytes"
 )
 
 var _ = Describe("Out", func() {
@@ -66,12 +67,17 @@ var _ = Describe("Out", func() {
 
 		Context("output data in properties file", func() {
 			BeforeEach(func() {
-				file, _ := os.Create(path.Join(source, "keyval.properties"))
+				var outDir = path.Join(source, "out")
+				os.MkdirAll(outDir, 0755)
+				file, _ := os.Create(path.Join(outDir, "keyval.properties"))
 				defer file.Close()
 				w := bufio.NewWriter(file)
 				fmt.Fprintln(w, "a=1")
 				fmt.Fprintln(w, "b=2")
 				w.Flush()
+				request = models.OutRequest{
+					File: path.Join("out", "keyval.properties"),
+				}
 			})
 
 			It("reports empty data", func() {
@@ -89,13 +95,52 @@ var _ = Describe("Out", func() {
 
 		Context("output no data in properties file", func() {
 			BeforeEach(func() {
-				file, _ := os.Create(path.Join(source, "keyval.properties"))
+				var outDir = path.Join(source, "out")
+				os.MkdirAll(outDir, 0755)
+				file, _ := os.Create(path.Join(outDir, "keyval.properties"))
 				defer file.Close()
+				request = models.OutRequest{
+					File: path.Join("out", "keyval.properties"),
+				}
 			})
 
 			It("reports empty data", func() {
 				Expect(len(response.Version)).To(Equal(0))
 				Expect(len(response.Metadata)).To(Equal(0))
+			})
+		})
+
+	})
+
+	Context("with invalid inputs", func() {
+		var request models.OutRequest
+		var response models.OutResponse
+		var session *gexec.Session
+
+		BeforeEach(func() {
+			request = models.OutRequest{}
+			response = models.OutResponse{}
+		})
+
+		JustBeforeEach(func() {
+			stdin := new(bytes.Buffer)
+
+			err := json.NewEncoder(stdin).Encode(request)
+			Expect(err).NotTo(HaveOccurred())
+
+			outCmd.Stdin = stdin
+
+			session, err = gexec.Start(outCmd, GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+
+		})
+
+		Context("no file specified", func() {
+
+			It("reports error", func() {
+				<-session.Exited
+				Expect(session.Err).To(gbytes.Say("no properties file specified"))
+				Expect(session.ExitCode()).To(Equal(1))
 			})
 		})
 
