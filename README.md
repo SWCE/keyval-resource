@@ -1,6 +1,6 @@
 # Concourse CI Key Value Resource
 
-Implements a resource that passes key values between jobs without using any external resource such as git/ s3 etc.
+Implements a resource that passes key values between jobs without using any external resource such as git/s3 etc.
 
 ## Source Configuration
 
@@ -86,8 +86,8 @@ jobs:
         file: tools/tasks/task.yml
 ```
 
-The build job get an empty file in `keyval/keyval.properties`. It then writes all the key values it needs to pass along (e.g. artifact id) in the `keyvalout/keyval.properties` file. 
-The test-deploy can ready the data from the `keyval/keyval.properties` file and use them as it pleases. 
+The build job gets an empty file in `keyval/keyval.properties`. It then writes all the key values it needs to pass along (e.g. artifact id) in the `keyvalout/keyval.properties` file. 
+The test-deploy can read the data from the `keyval/keyval.properties` file and use them as it pleases. 
 
 ## CI suggestions
 
@@ -119,7 +119,7 @@ fi
 
 ### Auto pass the keys
 
-You can add the following bash script to the **end** of every job to auto pass the specific environment variables as key values to the next job. 
+You can add the following bash script to the **end** of every job to auto pass specific environment variables as key values to the next job. 
 The script only passes environment variables that start with `PASSED_`. 
 The script assumes that the resource out file is `keyvalout/keyval.properties`:
 
@@ -169,7 +169,7 @@ will stop the build.
 Run the tests with the following command:
 
 ```sh
-docker build -t time-resource .
+docker build -t keyval-resource .
 ```
 
 ### Contributing
