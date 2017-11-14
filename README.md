@@ -8,6 +8,10 @@
 
 Implements a resource that passes key values between jobs without using any external resource such as git/s3 etc.
 
+## Thanks
+
+This resource was implemented based on the [time resource](https://github.com/concourse/time-resource)
+
 ## Source Configuration
 
 ``` YAML
