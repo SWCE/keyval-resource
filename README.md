@@ -1,7 +1,8 @@
 
- [![Docker Stars](https://img.shields.io/docker/stars/regevbr/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/regevbr/keyval-resource/stars/count/)
- [![Docker pulls](https://img.shields.io/docker/pulls/regevbr/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/regevbr/keyval-resource)
-[![Docker Automated build](https://img.shields.io/docker/automated/regevbr/keyval-resource.svg?maxAge=2592000?style=plastic)](https://github.com//regevbr/keyval-resource)
+[![Docker Stars](https://img.shields.io/docker/stars/regevbr/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/regevbr/keyval-resource/stars/count/)
+[![Docker pulls](https://img.shields.io/docker/pulls/regevbr/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/regevbr/keyval-resource)
+[![Docker build status](https://img.shields.io/docker/build/regevbr/keyval-resource.svg)](https://github.com/regevbr/keyval-resource)
+[![Docker Automated build](https://img.shields.io/docker/automated/regevbr/keyval-resource.svg)](https://github.com/regevbr/keyval-resource)
 
 # Concourse CI Key Value Resource
 
