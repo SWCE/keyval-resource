@@ -16,8 +16,5 @@ func main() {
 		os.Exit(1)
 	}
 	versions := []models.EmptyVersion{}
-	versions = append(versions, models.EmptyVersion{
-		Dummy: "dummy",
-	})
 	json.NewEncoder(os.Stdout).Encode(versions)
 }

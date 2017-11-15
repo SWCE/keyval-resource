@@ -1,7 +1,6 @@
 package models
 
 type EmptyVersion struct {
-	Dummy string  `json:"dummy"`
 }
 
 type Version map[string]string
@@ -13,7 +12,6 @@ type InRequest struct {
 
 type InResponse struct {
 	Version  Version  `json:"version"`
-	Metadata Metadata `json:"metadata"`
 }
 
 type OutParams struct {
@@ -27,7 +25,6 @@ type OutRequest struct {
 
 type OutResponse struct {
 	Version  Version  `json:"version"`
-	Metadata Metadata `json:"metadata"`
 }
 
 type CheckRequest struct {
@@ -39,9 +36,3 @@ type CheckResponse []EmptyVersion
 
 type Source struct {}
 
-type Metadata []MetadataField
-
-type MetadataField struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
-}

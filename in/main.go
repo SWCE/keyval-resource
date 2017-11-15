@@ -39,11 +39,8 @@ func main() {
 	}
 
 	var inVersion = request.Version
-	var metadata = models.Metadata{}
 
 	w := bufio.NewWriter(file)
-
-	delete(inVersion,"dummy")
 
 	var keys []string
 	for k := range inVersion {
@@ -53,10 +50,6 @@ func main() {
 
 	for _, k := range keys {
 		fmt.Fprintf(w, "%s=%s\n", k, inVersion[k])
-		metadata = append(metadata, models.MetadataField{
-			Name:  k,
-			Value: inVersion[k],
-		})
 	}
 
 	err = w.Flush()
@@ -67,7 +60,6 @@ func main() {
 
 	json.NewEncoder(os.Stdout).Encode(models.InResponse{
 		Version:  inVersion,
-		Metadata: metadata,
 	})
 }
 

@@ -47,7 +47,6 @@ var _ = Describe("In", func() {
 				Version: models.Version{
 					"a": "1",
 					"b": "2",
-					"dummy": "dummy",
 				},
 				Source:  models.Source{},
 			}
@@ -72,16 +71,10 @@ var _ = Describe("In", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("reports the version and metadata to be the input version", func() {
+		It("reports the version to be the input version", func() {
 			Expect(len(response.Version)).To(Equal(2))
 			Expect(response.Version["a"]).To(Equal("1"))
 			Expect(response.Version["b"]).To(Equal("2"))
-
-			Expect(len(response.Metadata)).To(Equal(2))
-			Expect(response.Metadata[0].Name).To(Equal("a"))
-			Expect(response.Metadata[0].Value).To(Equal("1"))
-			Expect(response.Metadata[1].Name).To(Equal("b"))
-			Expect(response.Metadata[1].Value).To(Equal("2"))
 		})
 
 		It("writes the requested data the destination", func() {
@@ -100,7 +93,6 @@ var _ = Describe("In", func() {
 
 			It("reports  empty data", func() {
 				Expect(len(response.Version)).To(Equal(0))
-				Expect(len(response.Metadata)).To(Equal(0))
 				var data = properties.MustLoadFile(filepath.Join(destination, "keyval.properties"),properties.UTF8).Map();
 				Expect(len(data)).To(Equal(0))
 			})
