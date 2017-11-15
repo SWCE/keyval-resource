@@ -86,12 +86,6 @@ var _ = Describe("Out", func() {
 				Expect(len(response.Version)).To(Equal(2))
 				Expect(response.Version["a"]).To(Equal("1"))
 				Expect(response.Version["b"]).To(Equal("2"))
-
-				Expect(len(response.Metadata)).To(Equal(2))
-				Expect(response.Metadata[0].Name).To(Equal("a"))
-				Expect(response.Metadata[0].Value).To(Equal("1"))
-				Expect(response.Metadata[1].Name).To(Equal("b"))
-				Expect(response.Metadata[1].Value).To(Equal("2"))
 			})
 		})
 
@@ -110,7 +104,6 @@ var _ = Describe("Out", func() {
 
 			It("reports empty data", func() {
 				Expect(len(response.Version)).To(Equal(0))
-				Expect(len(response.Metadata)).To(Equal(0))
 			})
 		})
 

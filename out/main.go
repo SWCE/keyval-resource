@@ -33,18 +33,8 @@ func main() {
 		}
 		sort.Strings(keys)
 
-		var metadata = models.Metadata{}
-
-		for _, k := range keys {
-			metadata = append(metadata, models.MetadataField{
-				Name:  k,
-				Value: data[k],
-			})
-		}
-
 		json.NewEncoder(os.Stdout).Encode(models.OutResponse{
 			Version:  data,
-			Metadata: metadata,
 		})
 	} else {
 		println("no properties file specified")

@@ -54,9 +54,8 @@ var _ = Describe("Check", func() {
 		})
 
 		Context("when no version is given", func() {
-			It("outputs an empty version", func() {
-				Expect(response).To(HaveLen(1))
-				Expect(response[0].Dummy).To(Equal("dummy"))
+			It("outputs an empty version array", func() {
+				Expect(response).To(HaveLen(0))
 			})
 		})
 
@@ -68,9 +67,8 @@ var _ = Describe("Check", func() {
 				}
 			})
 
-			It("outputs an empty version", func() {
-				Expect(response).To(HaveLen(1))
-				Expect(response[0].Dummy).To(Equal("dummy"))
+			It("outputs an empty version array", func() {
+				Expect(response).To(HaveLen(0))
 			})
 		})
 
