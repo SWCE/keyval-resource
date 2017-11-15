@@ -63,7 +63,6 @@ var _ = Describe("Check", func() {
 
 			BeforeEach(func() {
 				version = &models.EmptyVersion{
-					Dummy: "dummy",
 				}
 			})
 
