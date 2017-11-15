@@ -34,14 +34,12 @@ resources:
 
 ### `check`: Produce a single dummy key
 
-The resource uses the `version` identifier of the resource as a way to pass the data between jobs.
-Check returns a single `dummy` key that will be discarded and only used to satisfy the `check` behavior.
+This is a version-less resource so `check` behavior is no-op
 
 ### `in`: Report the given time.
 
 Fetches the given key values and stores them in the `keyval.properties` file.
 The format is of a `.properties` file, e.g. `"<key>=<value>"`.
-Key values are also reported as the metadata.
 
 #### Parameters
 
@@ -60,7 +58,6 @@ Reads the given properties file and sets them for the next job.
 #### Parameters
 - file - the properties file to read the key values from
 
-
 ## Examples
 
 ```YAML
@@ -78,8 +75,6 @@ jobs:
 
   - name: build
     plan:
-      - aggregate:
-        - get: keyval
       - task: build
         file: tools/tasks/build/task.yml
       - put: keyval
@@ -96,7 +91,7 @@ jobs:
         file: tools/tasks/task.yml
 ```
 
-The build job gets an empty file in `keyval/keyval.properties`. It then writes all the key values it needs to pass along (e.g. artifact id) in the `keyvalout/keyval.properties` file. 
+The build job writes all the key values it needs to pass along (e.g. artifact id) in the `keyvalout/keyval.properties` file. 
 The test-deploy can read the data from the `keyval/keyval.properties` file and use them as it pleases. 
 
 ## CI suggestions
