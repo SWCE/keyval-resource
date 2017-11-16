@@ -26,7 +26,7 @@ func main() {
 	}
 
 	output := filepath.Join(destination, "keyval.properties")
-	log("creating output file " + destination)
+	log("creating output file " + output)
 	file, err := os.Create(output)
 	if err != nil {
 		fatal("creating output file", err)
