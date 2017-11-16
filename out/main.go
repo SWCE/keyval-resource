@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/regevbr/keyval-resource/models"
-	"sort"
 	"github.com/magiconair/properties"
+	"fmt"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		println("usage: " + os.Args[0] + " <destination>")
-		os.Exit(1)
+		fatalNoErr("usage: " + os.Args[0] + " <destination>")
 	}
 
 	destination := os.Args[1]
@@ -26,24 +26,31 @@ func main() {
 	}
 
 	if request.Params.File != "" {
-		var data = properties.MustLoadFile(filepath.Join(destination, request.Params.File), properties.UTF8).Map();
-		var keys []string
-		for k := range data {
-			keys = append(keys, k)
-		}
-		sort.Strings(keys)
+		inputFile := filepath.Join(destination, request.Params.File)
+		log("reading input file " + inputFile)
+		var data = properties.MustLoadFile(inputFile, properties.UTF8).Map();
+
+		log("read " + strconv.Itoa(len(data)) + " keys from input file")
 
 		json.NewEncoder(os.Stdout).Encode(models.OutResponse{
 			Version:  data,
 		})
 	} else {
-		println("no properties file specified")
-		os.Exit(1)
+		fatalNoErr("no properties file specified")
 	}
 
 }
 
 func fatal(doing string, err error) {
 	println("error " + doing + ": " + err.Error())
+	os.Exit(1)
+}
+
+func log(doing string) {
+	fmt.Fprintln(os.Stderr, doing)
+}
+
+func fatalNoErr(doing string) {
+	log(doing)
 	os.Exit(1)
 }

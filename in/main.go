@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/regevbr/keyval-resource/models"
 	"fmt"
@@ -13,20 +14,22 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		println("usage: " + os.Args[0] + " <destination>")
-		os.Exit(1)
+		fatalNoErr("usage: " + os.Args[0] + " <destination>")
 	}
 
 	destination := os.Args[1]
 
+	log("creating destination dir " + destination)
 	err := os.MkdirAll(destination, 0755)
 	if err != nil {
 		fatal("creating destination", err)
 	}
 
-	file, err := os.Create(filepath.Join(destination, "keyval.properties"))
+	output := filepath.Join(destination, "keyval.properties")
+	log("creating output file " + destination)
+	file, err := os.Create(output)
 	if err != nil {
-		fatal("creating input file", err)
+		fatal("creating output file", err)
 	}
 
 	defer file.Close()
@@ -48,6 +51,7 @@ func main() {
 	}
 	sort.Strings(keys)
 
+	log("writing " + strconv.Itoa(len(keys)) + " keys to output file")
 	for _, k := range keys {
 		fmt.Fprintf(w, "%s=%s\n", k, inVersion[k])
 	}
@@ -55,15 +59,28 @@ func main() {
 	err = w.Flush()
 
 	if err != nil {
-		fatal("writing input file", err)
+		fatal("writing output file", err)
 	}
 
 	json.NewEncoder(os.Stdout).Encode(models.InResponse{
 		Version:  inVersion,
 	})
+
+	log("Done")
 }
 
 func fatal(doing string, err error) {
-	println("error " + doing + ": " + err.Error())
+	fmt.Fprintln(os.Stderr, "error " + doing + ": " + err.Error())
 	os.Exit(1)
 }
+
+func log(doing string) {
+	fmt.Fprintln(os.Stderr, doing)
+}
+
+func fatalNoErr(doing string) {
+	log(doing)
+	os.Exit(1)
+}
+
+
