@@ -1,8 +1,8 @@
 
-[![Docker Stars](https://img.shields.io/docker/stars/regevbr/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/regevbr/keyval-resource/stars/count/)
-[![Docker pulls](https://img.shields.io/docker/pulls/regevbr/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/regevbr/keyval-resource)
-[![Docker build status](https://img.shields.io/docker/build/regevbr/keyval-resource.svg)](https://github.com/regevbr/keyval-resource)
-[![Docker Automated build](https://img.shields.io/docker/automated/regevbr/keyval-resource.svg)](https://github.com/regevbr/keyval-resource)
+[![Docker Stars](https://img.shields.io/docker/stars/SWCE/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/SWCE/keyval-resource/stars/count/)
+[![Docker pulls](https://img.shields.io/docker/pulls/SWCE/keyval-resource.svg?style=plastic)](https://registry.hub.docker.com/v2/repositories/SWCE/keyval-resource)
+[![Docker build status](https://img.shields.io/docker/build/SWCE/keyval-resource.svg)](https://github.com/SWCE/keyval-resource)
+[![Docker Automated build](https://img.shields.io/docker/automated/SWCE/keyval-resource.svg)](https://github.com/SWCE/keyval-resource)
 
 # Concourse CI Key Value Resource
 
@@ -19,7 +19,7 @@ resource_types:
   - name: keyval
     type: docker-image
     source:
-      repository: regevbr/keyval-resource
+      repository: SWCE/keyval-resource
       
 resources:
   - name: keyval
@@ -65,7 +65,7 @@ resource_types:
   - name: keyval
     type: docker-image
     source:
-      repository: regevbr/keyval-resource
+      repository: SWCE/keyval-resource
 
 resources:
   - name: keyval
