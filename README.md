@@ -4,6 +4,8 @@
 [![Docker build status](https://img.shields.io/docker/build/swce/keyval-resource.svg)](https://github.com/swce/keyval-resource)
 [![Docker Automated build](https://img.shields.io/docker/automated/swce/keyval-resource.svg)](https://github.com/swce/keyval-resource)
 
+[![dockeri.co](http://dockeri.co/image/swce/keyval-resource)](https://hub.docker.com/r/swce/keyval-resource/)
+
 # Concourse CI Key Value Resource
 
 Implements a resource that passes key values between jobs without using any external resource such as git/s3 etc.
