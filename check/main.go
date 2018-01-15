@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/SWCE/keyval-resource/models"
+	"github.com/regevbr/keyval-resource/models"
 )
 
 func main() {
@@ -15,16 +15,6 @@ func main() {
 		fmt.Fprintln(os.Stderr, "parse error:", err.Error())
 		os.Exit(1)
 	}
-
-	versions := []models.Version{}
-
-	versions = append(versions, request.Version)
-
+	versions := []models.EmptyVersion{}
 	json.NewEncoder(os.Stdout).Encode(versions)
-
-	//json.NewEncoder(os.Stdout).Encode(models.CheckResponse{
-	//	Version:  request.Version["updated"],
-	//})
-	//versions := []models.EmptyVersion{}
-	//json.NewEncoder(os.Stdout).Encode(versions)
 }

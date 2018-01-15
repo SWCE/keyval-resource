@@ -8,7 +8,7 @@ import (
 	"path"
 	//"path/filepath"
 
-	"github.com/SWCE/keyval-resource/models"
+	"github.com/regevbr/keyval-resource/models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
