@@ -9,7 +9,7 @@ import (
 
 	"github.com/onsi/gomega/gexec"
 
-	"github.com/regevbr/keyval-resource/models"
+	"github.com/SWCE/keyval-resource/models"
 	"github.com/onsi/gomega/gbytes"
 )
 
