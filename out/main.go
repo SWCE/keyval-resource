@@ -6,10 +6,9 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/SWCE/keyval-resource/models"
+	"github.com/regevbr/keyval-resource/models"
 	"github.com/magiconair/properties"
 	"fmt"
-	"time"
 )
 
 func main() {
@@ -29,8 +28,7 @@ func main() {
 	if request.Params.File != "" {
 		inputFile := filepath.Join(destination, request.Params.File)
 		log("reading input file " + inputFile)
-		var data = properties.MustLoadFile(inputFile, properties.UTF8).Map()
-		data["updated"] = time.Now().Format(time.RFC850)
+		var data = properties.MustLoadFile(inputFile, properties.UTF8).Map();
 
 		log("read " + strconv.Itoa(len(data)) + " keys from input file")
 

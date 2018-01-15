@@ -1,6 +1,6 @@
 {
-	"ImportPath": "github.com/SWCE/keyval-resource",
-	"GoVersion": "go1.9.3",
+	"ImportPath": "github.com/regevbr/keyval-resource",
+	"GoVersion": "go1.5.1",
 	"Packages": [
 		"./..."
 	],
