@@ -9,7 +9,7 @@ import (
 
 	"github.com/onsi/gomega/gexec"
 
-	"github.com/regevbr/keyval-resource/models"
+	"github.com/SWCE/keyval-resource/models"
 	"github.com/onsi/gomega/gbytes"
 )
 
@@ -24,7 +24,7 @@ var _ = Describe("Check", func() {
 
 	Context("when executed", func() {
 		var source map[string]interface{}
-		var version *models.EmptyVersion;
+		var version *models.Version
 		var response models.CheckResponse
 
 		BeforeEach(func() {
@@ -55,19 +55,22 @@ var _ = Describe("Check", func() {
 
 		Context("when no version is given", func() {
 			It("outputs an empty version array", func() {
-				Expect(response).To(HaveLen(0))
+				Expect(response).To(HaveLen(1))
 			})
 		})
 
 		Context("when version is given", func() {
 
 			BeforeEach(func() {
-				version = &models.EmptyVersion{
-				}
+				version := make(models.Version)
+				version["a"] = "b"
 			})
 
 			It("outputs an empty version array", func() {
-				Expect(response).To(HaveLen(0))
+				Expect(response).To(HaveLen(1))
+				Expect(response[0]).To(HaveKey("updated"))
+				Expect(response[0]).To(HaveKey("a"))
+				Expect(response[0]["a"]).To(Equal("b"))
 			})
 		})
 

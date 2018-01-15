@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"github.com/regevbr/keyval-resource/models"
+	"github.com/SWCE/keyval-resource/models"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gexec"
@@ -83,9 +83,10 @@ var _ = Describe("Out", func() {
 			})
 
 			It("reports empty data", func() {
-				Expect(len(response.Version)).To(Equal(2))
+				Expect(len(response.Version)).To(Equal(3))
 				Expect(response.Version["a"]).To(Equal("1"))
 				Expect(response.Version["b"]).To(Equal("2"))
+				Expect(response.Version["updated"]).To(Not(BeEmpty()))
 			})
 		})
 
@@ -103,7 +104,8 @@ var _ = Describe("Out", func() {
 			})
 
 			It("reports empty data", func() {
-				Expect(len(response.Version)).To(Equal(0))
+				Expect(len(response.Version)).To(Equal(1))
+				Expect(response.Version["updated"]).To(Not(BeEmpty()))
 			})
 		})
 

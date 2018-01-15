@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/regevbr/keyval-resource/models"
+	"github.com/SWCE/keyval-resource/models"
 	"fmt"
 	"bufio"
 	"sort"
