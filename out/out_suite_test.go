@@ -17,7 +17,7 @@ var _ = BeforeSuite(func() {
 	if _, err = os.Stat("/opt/resource/out"); err == nil {
 		outPath = "/opt/resource/out"
 	} else {
-		outPath, err = gexec.Build("github.com/concourse/time-resource/out")
+		outPath, err = gexec.Build("github.com/SWCE/keyval-resource/out")
 		Expect(err).NotTo(HaveOccurred())
 	}
 })
