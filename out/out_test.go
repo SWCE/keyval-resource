@@ -83,7 +83,7 @@ var _ = Describe("Out", func() {
 			})
 
 			It("reports empty data", func() {
-				Expect(len(response.Version)).To(Equal(2))
+				Expect(len(response.Version)).To(Equal(4))
 				Expect(response.Version["a"]).To(Equal("1"))
 				Expect(response.Version["b"]).To(Equal("2"))
 				Expect(response.Version).To(HaveKey("UPDATED"))
